@@ -289,6 +289,39 @@ document.addEventListener('DOMContentLoaded', () => {
     youtubeModalOverlay.addEventListener('click', closeYoutubeModal);
   }
 
+  // ─── Botón Compartir Aplicación ───────────────────────────────────────────
+  const shareBtn = document.getElementById('shareBtn');
+  const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=gracia.ypazradio3';
+
+  if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
+      const shareData = {
+        title: 'Radio Gracia y Paz',
+        text: '¡Descarga la aplicación oficial de Radio Gracia y Paz para escuchar en vivo!',
+        url: PLAY_STORE_URL
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.warn('Error al compartir:', err);
+          }
+        }
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(PLAY_STORE_URL);
+          alert('¡Enlace de la aplicación copiado al portapapeles!\n' + PLAY_STORE_URL);
+        } catch (_) {
+          window.open(PLAY_STORE_URL, '_blank');
+        }
+      } else {
+        window.open(PLAY_STORE_URL, '_blank');
+      }
+    });
+  }
+
   // Cerrar modal al presionar Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && youtubeModal && youtubeModal.classList.contains('youtube-modal--active')) {
