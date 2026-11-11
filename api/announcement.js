@@ -1,6 +1,8 @@
 const STORAGE_URL = 'https://api.restful-api.dev/objects';
 const RECORD_ID = 'ff808181a09d98f701a1c862c54e032e';
 const ADMIN_PIN = process.env.ADMIN_PIN || 'gyp2026';
+const PUSHALERT_API_KEY = process.env.PUSHALERT_API_KEY || 'pa_E3KWfepWmzNqIEUEUqxrfzIQg2xmitLf_1RGpYv';
+const PUSHALERT_API_URL = 'https://api.pushalert.co/rest/v2/web-push/send';
 
 // Memoria de contingencia en tiempo de ejecución del servidor Vercel
 let memoryCache = {
@@ -52,7 +54,7 @@ export default async function handler(req, res) {
     });
   }
 
-  // POST: Guardar o actualizar aviso
+  // POST: Guardar o actualizar aviso y enviar Push si corresponde
   if (req.method === 'POST') {
     try {
       let body = req.body;
@@ -62,7 +64,7 @@ export default async function handler(req, res) {
         } catch (_) {}
       }
 
-      const { title, message, active, link, youtubeLive } = body || {};
+      const { title, message, active, link, youtubeLive, sendPush } = body || {};
 
       const announcementData = {
         active: active !== undefined ? Boolean(active) : true,
@@ -73,7 +75,7 @@ export default async function handler(req, res) {
         updatedAt: new Date().toISOString()
       };
 
-      // Intentar actualizar vía PUT
+      // 1. Guardar aviso en almacenamiento remoto
       let saved = false;
       try {
         const updateRes = await fetch(`${STORAGE_URL}/${RECORD_ID}`, {
@@ -91,14 +93,53 @@ export default async function handler(req, res) {
         console.warn('Fallo actualización remota:', e);
       }
 
-      // Siempre actualizar memoria caché del servidor
+      // Actualizar memoria local del servidor
       memoryCache = { ...announcementData };
+
+      // 2. Disparar notificación Push automática a todos los celulares a través de PushAlert
+      let pushResult = null;
+      const shouldSendPush = (sendPush !== false) && announcementData.active && announcementData.title && announcementData.message;
+
+      if (shouldSendPush) {
+        try {
+          const pushParams = new URLSearchParams({
+            title: announcementData.title.slice(0, 64),
+            message: announcementData.message.slice(0, 192),
+            url: 'https://gracia-y-paz.vercel.app/',
+            icon: 'https://gracia-y-paz.vercel.app/public/logo.png'
+          });
+
+          const pushRes = await fetch(PUSHALERT_API_URL, {
+            method: 'POST',
+            headers: {
+              'Authorization': `api_key=${PUSHALERT_API_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: pushParams.toString()
+          });
+
+          if (pushRes.ok) {
+            pushResult = await pushRes.json();
+          } else {
+            const errText = await pushRes.text();
+            console.warn('PushAlert respondió con error:', pushRes.status, errText);
+          }
+        } catch (pushErr) {
+          console.warn('Error al conectar con PushAlert:', pushErr);
+        }
+      }
+
+      const isPushSuccess = Boolean(pushResult && pushResult.success);
 
       return res.status(200).json({
         success: true,
-        message: 'Aviso guardado correctamente.',
+        message: isPushSuccess
+          ? '¡Aviso publicado y notificación push enviada a todos los celulares con éxito!'
+          : 'Aviso guardado correctamente en la web.',
         announcement: announcementData,
-        storedRemotely: saved
+        storedRemotely: saved,
+        pushSent: isPushSuccess,
+        pushDetails: pushResult
       });
     } catch (err) {
       return res.status(500).json({ error: 'No se pudo guardar el aviso: ' + err.message });

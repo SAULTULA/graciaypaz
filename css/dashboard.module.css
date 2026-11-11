@@ -479,6 +479,12 @@
   gap: var(--spacing-md);
 }
 
+.announcement-admin__checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .announcement-admin__checkbox-label {
   display: flex;
   align-items: center;

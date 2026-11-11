@@ -282,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const announcementMessage = document.getElementById('announcementMessage');
   const announcementYoutube = document.getElementById('announcementYoutube');
   const announcementActive = document.getElementById('announcementActive');
+  const announcementSendPush = document.getElementById('announcementSendPush');
   const announcementStatusBadge = document.getElementById('announcementStatusBadge');
   const announcementFeedback = document.getElementById('announcementFeedback');
   const deleteAnnouncementBtn = document.getElementById('deleteAnnouncementBtn');
@@ -344,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const message = announcementMessage.value.trim();
       const youtubeLive = announcementYoutube ? announcementYoutube.value.trim() : '';
       const active = announcementActive.checked;
+      const sendPush = announcementSendPush ? announcementSendPush.checked : true;
 
       if (!title || !message) {
         showAnnouncementFeedback('Por favor completa el título y el mensaje.', false);
@@ -351,18 +353,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       saveAnnouncementBtn.disabled = true;
-      saveAnnouncementBtn.textContent = 'Publicando...';
+      saveAnnouncementBtn.textContent = 'Publicando y enviando push...';
 
       try {
         const res = await fetch(`/api/announcement.js?pin=${encodeURIComponent(currentPin)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, message, active, youtubeLive })
+          body: JSON.stringify({ title, message, active, youtubeLive, sendPush })
         });
 
         const data = await res.json();
         if (res.ok && data.success) {
-          showAnnouncementFeedback('¡Aviso publicado exitosamente para todos los oyentes!');
+          const feedbackMsg = data.pushSent
+            ? '¡Aviso publicado y notificación push enviada a todos los celulares con éxito!'
+            : '¡Aviso publicado exitosamente para todos los oyentes!';
+          showAnnouncementFeedback(feedbackMsg);
           updateAnnouncementBadge(active);
         } else {
           showAnnouncementFeedback(data.error || 'Error al guardar el aviso.', false);
@@ -371,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showAnnouncementFeedback('Error de conexión: ' + err.message, false);
       } finally {
         saveAnnouncementBtn.disabled = false;
-        saveAnnouncementBtn.textContent = 'Publicar Aviso';
+        saveAnnouncementBtn.textContent = 'Publicar y Enviar Push';
       }
     });
   }

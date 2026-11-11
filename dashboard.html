@@ -100,16 +100,22 @@
       </div>
 
       <div class="announcement-admin__row">
-        <label class="announcement-admin__checkbox-label">
-          <input type="checkbox" id="announcementActive" class="announcement-admin__checkbox" checked>
-          <span>Mostrar aviso visible para todos los oyentes</span>
-        </label>
+        <div class="announcement-admin__checkboxes">
+          <label class="announcement-admin__checkbox-label">
+            <input type="checkbox" id="announcementActive" class="announcement-admin__checkbox" checked>
+            <span>Mostrar aviso dentro de la web y la app</span>
+          </label>
+          <label class="announcement-admin__checkbox-label">
+            <input type="checkbox" id="announcementSendPush" class="announcement-admin__checkbox" checked>
+            <span>Enviar Notificación Push a los celulares (PushAlert)</span>
+          </label>
+        </div>
         <div class="announcement-admin__buttons">
           <button type="button" class="dashboard__btn dashboard__btn--danger" id="deleteAnnouncementBtn">
             Desactivar
           </button>
           <button type="submit" class="dashboard__btn dashboard__btn--primary" id="saveAnnouncementBtn">
-            Publicar Aviso
+            Publicar y Enviar Push
           </button>
         </div>
       </div>
