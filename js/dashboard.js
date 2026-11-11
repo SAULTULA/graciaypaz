@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const announcementForm = document.getElementById('announcementForm');
   const announcementTitle = document.getElementById('announcementTitle');
   const announcementMessage = document.getElementById('announcementMessage');
+  const announcementYoutube = document.getElementById('announcementYoutube');
   const announcementActive = document.getElementById('announcementActive');
   const announcementStatusBadge = document.getElementById('announcementStatusBadge');
   const announcementFeedback = document.getElementById('announcementFeedback');
@@ -296,9 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data && data.title) {
         announcementTitle.value = data.title || '';
         announcementMessage.value = data.message || '';
+        if (announcementYoutube) announcementYoutube.value = data.youtubeLive || '';
         announcementActive.checked = Boolean(data.active);
       } else {
         announcementActive.checked = false;
+        if (announcementYoutube) announcementYoutube.value = data.youtubeLive || '';
       }
       updateAnnouncementBadge(Boolean(data && data.active));
     } catch (e) {
@@ -339,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const title = announcementTitle.value.trim();
       const message = announcementMessage.value.trim();
+      const youtubeLive = announcementYoutube ? announcementYoutube.value.trim() : '';
       const active = announcementActive.checked;
 
       if (!title || !message) {
@@ -353,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`/api/announcement.js?pin=${encodeURIComponent(currentPin)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, message, active })
+          body: JSON.stringify({ title, message, active, youtubeLive })
         });
 
         const data = await res.json();

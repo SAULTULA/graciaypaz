@@ -156,6 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
         announcementBanner.classList.add('announcement-banner--visible');
         announcementBanner.setAttribute('aria-hidden', 'false');
 
+        if (data.youtubeLive) {
+          currentYoutubeLive = data.youtubeLive;
+        }
+
         if (announcementCloseBtn) {
           announcementCloseBtn.onclick = () => {
             announcementBanner.classList.remove('announcement-banner--visible');
@@ -184,15 +188,85 @@ document.addEventListener('DOMContentLoaded', () => {
   const youtubeModal = document.getElementById('youtubeModal');
   const youtubeModalOverlay = document.getElementById('youtubeModalOverlay');
   const youtubeIframe = document.getElementById('youtubeIframe');
+  const youtubeExternalLink = document.getElementById('youtubeExternalLink');
 
-  const YOUTUBE_LIVE_EMBED = 'https://www.youtube-nocookie.com/embed/live_stream?channel=@SaulFernandoTula';
+  const DEFAULT_CHANNEL_ID = 'UCBJbZKZ9PYUhGP_AZMGyopg';
+  const DEFAULT_LIVE_VIDEO_ID = 'rlNdDdxES4E';
+  let currentYoutubeLive = '';
+
+  function getYoutubeEmbedUrl(input) {
+    if (!input) {
+      return `https://www.youtube.com/embed/${DEFAULT_LIVE_VIDEO_ID}?autoplay=1`;
+    }
+    input = input.trim();
+
+    // Si es un Channel ID (empieza con UC y tiene longitud adecuada)
+    if (input.startsWith('UC') && input.length >= 22) {
+      return `https://www.youtube.com/embed/live_stream?channel=${input}&autoplay=1`;
+    }
+
+    // Si es una URL con channel/UC...
+    const channelMatch = input.match(/channel\/(UC[a-zA-Z0-9_-]{20,24})/);
+    if (channelMatch && channelMatch[1]) {
+      return `https://www.youtube.com/embed/live_stream?channel=${channelMatch[1]}&autoplay=1`;
+    }
+
+    // Si es una URL completa de YouTube (watch?v=, youtu.be/, live/, embed/)
+    const videoMatch = input.match(/(?:watch\?v=|youtu\.be\/|live\/|embed\/)([a-zA-Z0-9_-]{11})/);
+    if (videoMatch && videoMatch[1]) {
+      return `https://www.youtube.com/embed/${videoMatch[1]}?autoplay=1`;
+    }
+
+    // Si es directamente un ID de video de 11 caracteres
+    if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+      return `https://www.youtube.com/embed/${input}?autoplay=1`;
+    }
+
+    // Si es un handle o mención a @SaulFernandoTula
+    if (input.includes('@') || input.includes('SaulFernandoTula')) {
+      return `https://www.youtube.com/embed/live_stream?channel=${DEFAULT_CHANNEL_ID}&autoplay=1`;
+    }
+
+    // Si ya viene como URL de embed
+    if (input.includes('/embed/')) {
+      return input.includes('autoplay') ? input : `${input}${input.includes('?') ? '&' : '?'}autoplay=1`;
+    }
+
+    return `https://www.youtube.com/embed/${DEFAULT_LIVE_VIDEO_ID}?autoplay=1`;
+  }
+
+  function getYoutubeDirectLink(embedUrl) {
+    if (!embedUrl) return `https://www.youtube.com/watch?v=${DEFAULT_LIVE_VIDEO_ID}`;
+    const vidMatch = embedUrl.match(/embed\/([a-zA-Z0-9_-]{11})/);
+    if (vidMatch && vidMatch[1]) {
+      return `https://www.youtube.com/watch?v=${vidMatch[1]}`;
+    }
+    const chanMatch = embedUrl.match(/channel=([a-zA-Z0-9_-]+)/);
+    if (chanMatch && chanMatch[1]) {
+      return `https://www.youtube.com/channel/${chanMatch[1]}/live`;
+    }
+    return `https://www.youtube.com/watch?v=${DEFAULT_LIVE_VIDEO_ID}`;
+  }
 
   function openYoutubeModal() {
     if (!youtubeModal || !youtubeIframe) return;
     youtubeModal.classList.add('youtube-modal--active');
     youtubeModal.setAttribute('aria-hidden', 'false');
-    // Asignar el src para iniciar la carga únicamente al abrir
-    youtubeIframe.src = youtubeIframe.getAttribute('data-src') || YOUTUBE_LIVE_EMBED;
+
+    let targetUrl = '';
+    if (currentYoutubeLive) {
+      targetUrl = getYoutubeEmbedUrl(currentYoutubeLive);
+    } else {
+      const dataSrc = youtubeIframe.getAttribute('data-src');
+      targetUrl = getYoutubeEmbedUrl(dataSrc || DEFAULT_LIVE_VIDEO_ID);
+    }
+
+    if (targetUrl) {
+      youtubeIframe.src = targetUrl;
+      if (youtubeExternalLink) {
+        youtubeExternalLink.href = getYoutubeDirectLink(targetUrl);
+      }
+    }
   }
 
   function closeYoutubeModal() {

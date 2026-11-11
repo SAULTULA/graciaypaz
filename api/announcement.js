@@ -1,5 +1,16 @@
-const KVDB_ANNOUNCEMENT_URL = 'https://kvdb.io/gyp_radio_listeners_store_2026_x9k2/announcement';
+const STORAGE_URL = 'https://api.restful-api.dev/objects';
+const RECORD_ID = 'ff808181a09d98f701a1c862c54e032e';
 const ADMIN_PIN = process.env.ADMIN_PIN || 'gyp2026';
+
+// Memoria de contingencia en tiempo de ejecución del servidor Vercel
+let memoryCache = {
+  active: false,
+  title: '',
+  message: '',
+  link: '',
+  youtubeLive: 'https://www.youtube.com/watch?v=rlNdDdxES4E',
+  updatedAt: new Date().toISOString()
+};
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,22 +21,26 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // GET: Obtener el aviso activo (Acceso público para los oyentes)
+  // GET: Obtener el aviso activo (Acceso público para los oyentes y la app Android)
   if (req.method === 'GET') {
     try {
-      const response = await fetch(KVDB_ANNOUNCEMENT_URL, {
+      const response = await fetch(`${STORAGE_URL}/${RECORD_ID}`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       });
 
-      if (!response.ok) {
-        return res.status(200).json({ active: false });
+      if (response.ok) {
+        const result = await response.json();
+        if (result && result.data) {
+          memoryCache = { ...result.data };
+          return res.status(200).json(result.data);
+        }
       }
 
-      const data = await response.json();
-      return res.status(200).json(data || { active: false });
+      // Si el registro remoto aún no tiene datos o falló, devolver la memoria caché
+      return res.status(200).json(memoryCache);
     } catch (err) {
-      return res.status(200).json({ active: false, error: err.message });
+      return res.status(200).json(memoryCache);
     }
   }
 
@@ -40,30 +55,50 @@ export default async function handler(req, res) {
   // POST: Guardar o actualizar aviso
   if (req.method === 'POST') {
     try {
-      const { title, message, active, link } = req.body || {};
+      let body = req.body;
+      if (typeof body === 'string') {
+        try {
+          body = JSON.parse(body);
+        } catch (_) {}
+      }
+
+      const { title, message, active, link, youtubeLive } = body || {};
 
       const announcementData = {
         active: active !== undefined ? Boolean(active) : true,
         title: (title || '').trim(),
         message: (message || '').trim(),
         link: (link || '').trim(),
+        youtubeLive: (youtubeLive || '').trim() || 'https://www.youtube.com/watch?v=rlNdDdxES4E',
         updatedAt: new Date().toISOString()
       };
 
-      const response = await fetch(KVDB_ANNOUNCEMENT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(announcementData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al guardar en almacenamiento KVDB.');
+      // Intentar actualizar vía PUT
+      let saved = false;
+      try {
+        const updateRes = await fetch(`${STORAGE_URL}/${RECORD_ID}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'gracia_y_paz_announcement',
+            data: announcementData
+          })
+        });
+        if (updateRes.ok) {
+          saved = true;
+        }
+      } catch (e) {
+        console.warn('Fallo actualización remota:', e);
       }
+
+      // Siempre actualizar memoria caché del servidor
+      memoryCache = { ...announcementData };
 
       return res.status(200).json({
         success: true,
         message: 'Aviso guardado correctamente.',
-        announcement: announcementData
+        announcement: announcementData,
+        storedRemotely: saved
       });
     } catch (err) {
       return res.status(500).json({ error: 'No se pudo guardar el aviso: ' + err.message });
@@ -73,12 +108,27 @@ export default async function handler(req, res) {
   // DELETE: Desactivar o borrar aviso
   if (req.method === 'DELETE') {
     try {
-      const emptyData = { active: false, updatedAt: new Date().toISOString() };
-      await fetch(KVDB_ANNOUNCEMENT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emptyData)
-      });
+      const emptyData = {
+        active: false,
+        title: '',
+        message: '',
+        link: '',
+        youtubeLive: memoryCache.youtubeLive || '',
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        await fetch(`${STORAGE_URL}/${RECORD_ID}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'gracia_y_paz_announcement',
+            data: emptyData
+          })
+        });
+      } catch (_) {}
+
+      memoryCache = { ...emptyData };
       return res.status(200).json({ success: true, message: 'Aviso desactivado correctamente.' });
     } catch (err) {
       return res.status(500).json({ error: 'No se pudo desactivar el aviso: ' + err.message });
@@ -87,4 +137,3 @@ export default async function handler(req, res) {
 
   return res.status(405).json({ error: 'Método no permitido.' });
 }
-
