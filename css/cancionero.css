@@ -1,0 +1,229 @@
+/* cancionero.css */
+.cancionero {
+  padding: var(--spacing-lg);
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ── Header ────────────────────────────────────────── */
+.cancionero__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding-top: var(--spacing-sm);
+}
+
+.cancionero__back-btn {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  color: var(--color-text-main);
+  border-radius: var(--border-radius-full);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.cancionero__back-btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.cancionero__title {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* ── Buscador ───────────────────────────────────────── */
+.cancionero__search {
+  width: 100%;
+  padding: 14px var(--spacing-lg);
+  border-radius: var(--border-radius-full);
+  border: 1px solid var(--color-glass-border);
+  background: var(--color-glass-bg);
+  color: var(--color-text-main);
+  font-family: var(--font-family-main);
+  font-size: 1.05rem;
+  margin-bottom: var(--spacing-lg);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.cancionero__search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.cancionero__search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+/* ── Lista de Canciones ─────────────────────────────── */
+.cancionero__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.cancionero__item {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--border-radius-md);
+  padding: 18px var(--spacing-lg);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cancionero__item:hover {
+  border-color: var(--color-primary);
+  background: rgba(14, 165, 233, 0.12);
+  transform: translateX(4px);
+}
+
+.cancionero__item:active {
+  transform: translateX(2px);
+}
+
+.cancionero__item-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0;
+  color: var(--color-text-main);
+}
+
+.cancionero__item-artist {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ── Vista Individual de Canción ────────────────────── */
+.song-view {
+  display: none;
+}
+
+.song-view--active {
+  display: block;
+}
+
+.cancionero__list-view--hidden {
+  display: none;
+}
+
+.song-view__header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.song-view__controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  background: var(--color-glass-bg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  align-items: center;
+  border: 1px solid var(--color-glass-border);
+}
+
+.song-view__controls-label {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-right: auto;
+}
+
+.song-view__btn {
+  background: transparent;
+  border: 1px solid var(--color-glass-border);
+  color: var(--color-text-main);
+  border-radius: var(--border-radius-full);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.song-view__btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.song-view__content {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+  background: var(--color-glass-bg);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-glass-border);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.chord {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cancionero {
+    padding: var(--spacing-md);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cancionero__header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .cancionero__title {
+    font-size: 1.4rem;
+  }
+
+  .cancionero__item {
+    padding: 16px var(--spacing-md);
+  }
+
+  .cancionero__item-title {
+    font-size: 1.1rem;
+  }
+
+  .cancionero__item-artist {
+    font-size: 0.9rem;
+  }
+
+  .cancionero__search {
+    padding: 12px var(--spacing-md);
+    font-size: 1rem;
+  }
+
+  .song-view__content {
+    padding: var(--spacing-md);
+    font-size: 0.9rem;
+  }
+
+  .song-view__controls {
+    flex-wrap: wrap;
+  }
+}

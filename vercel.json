@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/*.js", "use": "@vercel/node" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "css/**", "use": "@vercel/static" },
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "public/**", "use": "@vercel/static" },
+    { "src": "data/**", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/radio", "destination": "/api/radio.js" },
+    { "source": "/api/radio", "destination": "/api/radio.js" },
+    { "source": "/api/stats", "destination": "/api/stats.js" },
+    { "source": "/api/announcement", "destination": "/api/announcement.js" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Permissions-Policy",
+          "value": "microphone=*, camera=*, autoplay=*, display-capture=*"
+        }
+      ]
+    }
+  ]
+}

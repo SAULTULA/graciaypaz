@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancionero - Radio Gracia y Paz</title>
+
+  <!-- Tipografía Moderna -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cancionero.css">
+</head>
+
+<body class="app-body">
+  <main class="cancionero">
+
+    <!-- Header -->
+    <header class="cancionero__header">
+      <a href="index.html" class="cancionero__back-btn" aria-label="Volver">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+      <h1 class="cancionero__title">Cancionero</h1>
+    </header>
+
+    <!-- Vista de Lista -->
+    <section id="listView" class="cancionero__list-view">
+      <input type="text" id="searchInput" class="cancionero__search" placeholder="Buscar por título o artista...">
+      <div id="songList" class="cancionero__list">
+        <!-- Las canciones se cargarán aquí dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Vista de Canción Individual -->
+    <section id="songView" class="song-view">
+      <div class="song-view__header">
+        <h2 id="songTitle" class="cancionero__title"></h2>
+        <p id="songArtist" class="cancionero__item-artist"></p>
+        
+        <div class="song-view__controls">
+          <span class="song-view__controls-label">Tono: <span id="currentToneOffset">0</span></span>
+          <button id="btnToneDown" class="song-view__btn" aria-label="Bajar un semitono">-1</button>
+          <button id="btnToneUp" class="song-view__btn" aria-label="Subir un semitono">+1</button>
+        </div>
+      </div>
+      
+      <div id="songContent" class="song-view__content">
+        <!-- Letra y acordes aquí -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/cancionero.js"></script>
+</body>
+</html>

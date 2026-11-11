@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio Gracia y Paz</title>
+
+  <!-- SEO Best Practices -->
+  <meta name="description" content="Radio en vivo con KSM Streaming HD — Servidores de Radio Online & Apps Android.">
+  <link rel="icon" type="image/png" href="public/logo.png">
+
+  <!-- Tipografía Moderna -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="app-body">
+  <!-- Removido para colocarlo centrado debajo del titulo -->
+
+  <!-- Botón de Menú -->
+  <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Sidebar / Menú Lateral -->
+  <aside class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="sidebar__header">
+      <h2 class="sidebar__title">Menú</h2>
+      <button class="sidebar__close" id="closeSidebarBtn" aria-label="Cerrar menú">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar__content">
+      <section class="sidebar__section">
+        <h3 class="sidebar__subtitle">Legal</h3>
+        <a href="privacy.html" class="sidebar__link">Políticas de Privacidad</a>
+      </section>
+
+      <section class="sidebar__section">
+        <h3 class="sidebar__subtitle">Contacto</h3>
+        <a href="https://wa.me/5491166508379" target="_blank" rel="noopener noreferrer"
+          class="sidebar__link sidebar__link--whatsapp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+          </svg>
+          WhatsApp
+        </a>
+      </section>
+
+      <section class="sidebar__ad">
+        <div class="sidebar__ad-content">
+          <h3 class="sidebar__ad-title">¿Necesitas una app?</h3>
+          <p class="sidebar__ad-text">Desarrollo profesional de aplicaciones y software para tu negocio.</p>
+          <a href="https://ksmservicios.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar__ad-btn">
+            Contrata a KSM Servicios
+          </a>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="app-container">
+
+    <!-- Banner de Avisos y Comunicados In-App -->
+    <aside class="announcement-banner" id="announcementBanner" aria-live="polite" aria-hidden="true">
+      <div class="announcement-banner__content">
+        <div class="announcement-banner__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+        </div>
+        <div class="announcement-banner__text-wrap">
+          <h4 class="announcement-banner__title" id="announcementTitleText"></h4>
+          <p class="announcement-banner__message" id="announcementMessageText"></p>
+        </div>
+        <button class="announcement-banner__close" id="announcementCloseBtn" aria-label="Cerrar aviso">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Reproductor Principal -->
+    <section class="player" aria-label="Reproductor de Radio">
+      <div class="player__brand-badge">
+        <span class="player__brand-dot"></span>
+        <span class="player__brand-text">STREAMING HD &bull; 320 KBPS</span>
+      </div>
+      <div class="player__visual">
+        <div class="player__artwork" id="artwork">
+          <img src="public/logo.png" alt="Logo de la Radio" class="player__logo">
+        </div>
+        <div class="player__info">
+          <h3 class="player__title" id="nowPlayingTrack">ONLINE</h3>
+          <h3 class="player__subtitle" id="nowPlayingProgram">Radio Gracia y Paz</h3>
+          <div class="watermark-center" aria-hidden="true">
+            <img src="public/ksm.png" alt="KSM Logo" class="watermark-center__image">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección YouTube Live -->
+    <section class="youtube-card" aria-label="Transmisión en Vivo por YouTube">
+      <div class="youtube-card__content">
+        <h3 class="youtube-card__title">Transmisión en Vivo</h3>
+        <p class="youtube-card__text">Mira nuestro programa en vivo a través de YouTube.</p>
+        <button id="openYoutubeBtn" class="youtube-card__btn" aria-label="Ver transmisión en vivo por YouTube">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="youtube-card__icon">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          Ver en Vivo por YouTube
+        </button>
+      </div>
+    </section>
+
+    <!-- Sección Cancionero -->
+    <section class="songbook" aria-label="Cancionero">
+      <div class="songbook__content">
+        <h3 class="songbook__title">Cancionero</h3>
+        <p class="songbook__text">Accede a las letras y acordes de las canciones.</p>
+        <a href="cancionero.html" class="songbook__btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="songbook__icon">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+          </svg>
+          Abrir Cancionero
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Ventana Emergente YouTube Live -->
+  <div class="youtube-modal" id="youtubeModal" aria-hidden="true">
+    <div class="youtube-modal__overlay" id="youtubeModalOverlay"></div>
+    <div class="youtube-modal__content">
+      <header class="youtube-modal__header">
+        <div class="youtube-modal__title-group">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#ff0000" class="youtube-modal__badge-icon">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <h3 class="youtube-modal__title">YouTube Live — Saúl Fernando Tula</h3>
+        </div>
+        <button class="youtube-modal__close" id="closeYoutubeBtn" aria-label="Cerrar video">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div class="youtube-modal__body">
+        <div class="youtube-modal__video-wrapper">
+          <iframe
+            id="youtubeIframe"
+            class="youtube-modal__iframe"
+            src=""
+            data-src="https://www.youtube-nocookie.com/embed/live_stream?channel=@SaulFernandoTula"
+            title="Transmisión en Vivo YouTube"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="youtube-modal__footer">
+          <a href="https://www.youtube.com/@SaulFernandoTula/live" target="_blank" rel="noopener noreferrer" class="youtube-modal__link">
+            Abrir en la aplicación de YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Programa en Vivo (Pantalla Completa) -->
+  <div class="live-modal" id="liveModal" aria-hidden="true">
+    <div class="live-modal__content">
+      <img src="" alt="Programa en Vivo" id="liveBannerImg" class="live-modal__image">
+      <div id="liveBannerText" class="live-modal__text"></div>
+      <button id="closeLiveBtn" class="live-modal__close">Cerrar Banner</button>
+    </div>
+  </div>
+
+  <!-- Lógica -->
+  <script src="js/script.js"></script>
+</body>
+
+</html>
